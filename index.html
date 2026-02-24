@@ -130,11 +130,12 @@
                         <input type="text" id="name" required placeholder="Ex: Jean Dupont">
                     </div>
                     <div class="form-group">
-                        <label>Disponibilité (Créneaux)</label>
+                        <label>Disponibilité (Créneaux) <span style="font-weight:400; color:#64748b;">- Optionnel</span></label>
                         <div class="checkbox-row">
                             <label class="checkbox-label"><input type="checkbox" id="time18"> 18H</label>
                             <label class="checkbox-label"><input type="checkbox" id="time19"> 19H</label>
                         </div>
+                        <p style="font-size:0.75rem; color:#64748b; margin-top:5px;">💡 Tu peux indiquer ton nom maintenant et préciser tes créneaux plus tard en cliquant sur ✏️ Modifier</p>
                     </div>
                     <div class="grid-2">
                         <div class="form-group">
@@ -229,7 +230,7 @@
                     <input type="text" id="editName" required>
                 </div>
                 <div class="form-group">
-                    <label>Disponibilité (Créneaux)</label>
+                    <label>Disponibilité (Créneaux) <span style="font-weight:400; color:#64748b;">- Optionnel</span></label>
                     <div class="checkbox-row">
                         <label class="checkbox-label"><input type="checkbox" id="editTime18"> 18H</label>
                         <label class="checkbox-label"><input type="checkbox" id="editTime19"> 19H</label>
@@ -336,7 +337,8 @@
             const tshirt = document.getElementById('editTshirt').value;
 
             if (!name) { showNotification('Veuillez saisir un nom.', 'error'); return; }
-            if (!time18 && !time19) { showNotification('Veuillez sélectionner au moins un créneau.', 'error'); return; }
+            // Les créneaux sont maintenant optionnels
+            // if (!time18 && !time19) { showNotification('Veuillez sélectionner au moins un créneau.', 'error'); return; }
 
             const original = editSubmitBtn.textContent;
             editSubmitBtn.textContent = '⏳ Enregistrement...';
@@ -470,7 +472,8 @@
             const tshirt = document.getElementById('tshirt').value;
 
             if (!name) { showNotification('Veuillez saisir un nom.', 'error'); return; }
-            if (!time18 && !time19) { showNotification('Veuillez sélectionner au moins un créneau.', 'error'); return; }
+            // Les créneaux sont maintenant optionnels
+            // if (!time18 && !time19) { showNotification('Veuillez sélectionner au moins un créneau.', 'error'); return; }
 
             const original = submitBtn.textContent;
             submitBtn.textContent = '⏳ Enregistrement...';
