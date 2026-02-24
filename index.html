@@ -59,9 +59,6 @@
         .refresh-info { font-size: 0.8rem; color: #0369a1; display: flex; align-items: center; gap: 6px; }
         .refresh-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; display: inline-block; animation: pulse 2s infinite; }
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-        .btn-refresh { background: #004B87; color: white; border: none; border-radius: 8px; padding: 7px 14px; font-size: 0.85rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
-        .btn-refresh:hover { background: #003a6b; }
-        .btn-refresh:disabled { opacity: 0.6; cursor: not-allowed; }
 
         .table-wrapper { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; }
@@ -187,9 +184,8 @@
                     <div class="refresh-bar">
                         <div class="refresh-info">
                             <span class="refresh-dot"></span>
-                            Synchro temps réel active 🔄
+                            🔥 Synchro temps réel active
                         </div>
-                        <button class="btn-refresh" id="refreshBtn" onclick="manualRefresh()">🔄 Actualiser maintenant</button>
                     </div>
                 </div>
 
@@ -292,7 +288,6 @@
         const emptyState = document.getElementById('emptyState');
         const form = document.getElementById('registrationForm');
         const submitBtn = document.getElementById('submitBtn');
-        const refreshBtn = document.getElementById('refreshBtn');
         const editModal = document.getElementById('editModal');
         const editForm = document.getElementById('editForm');
         const editSubmitBtn = document.getElementById('editSubmitBtn');
@@ -321,12 +316,7 @@
             const h = now.getHours().toString().padStart(2,'0');
             const m = now.getMinutes().toString().padStart(2,'0');
             const s = now.getSeconds().toString().padStart(2,'0');
-            document.getElementById('lastUpdate').textContent = `🔄 Synchro temps réel : ${h}:${m}:${s}`;
-        }
-
-        function manualRefresh() { 
-            showNotification('🔄 Synchronisation en temps réel active', 'info');
-            setTimeout(() => loadData(true), 1000);
+            document.getElementById('lastUpdate').textContent = `🔥 Synchro temps réel : ${h}:${m}:${s}`;
         }
 
         function openEditModal(volunteer) {
@@ -401,29 +391,6 @@
                 console.error(err);
                 showNotification("❌ Erreur lors de la suppression", 'error');
             });
-        }
-
-        function loadData(showFeedback = true) {
-            if (showFeedback) { refreshBtn.textContent = '⏳ Chargement...'; refreshBtn.disabled = true; }
-            tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:#004B87">⏳ Chargement depuis Firebase...</td></tr>';
-            emptyState.style.display = 'none';
-
-            fetch(API_URL)
-                .then(res => res.json())
-                .then(data => {
-                    volunteers = data || [];
-                    renderTable();
-                    updateLastUpdateTime();
-                    if (showFeedback) showNotification('✅ Liste mise à jour !', 'info');
-                    refreshBtn.textContent = '🔄 Actualiser maintenant';
-                    refreshBtn.disabled = false;
-                })
-                .catch(err => {
-                    console.error(err);
-                    tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:#dc2626;font-size:0.9rem">⚠️ Connexion impossible. Vérifiez votre connexion internet.</td></tr>';
-                    refreshBtn.textContent = '🔄 Actualiser maintenant';
-                    refreshBtn.disabled = false;
-                });
         }
 
         function renderTable() {
@@ -532,8 +499,9 @@
             }
         });
 
-        // Chargement initial
-        loadData(true);
+        // Afficher un message de chargement initial
+        tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:#004B87">🔥 Connexion à Firebase en temps réel...</td></tr>';
+        emptyState.style.display = 'none';
     </script>
 </body>
 </html>
