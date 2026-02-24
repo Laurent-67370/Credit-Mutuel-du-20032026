@@ -1,0 +1,7 @@
+{
+  "build": {
+    "functions": {
+      "directory": "netlify/functions"
+    }
+  }
+}

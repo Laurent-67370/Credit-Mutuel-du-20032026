@@ -1,0 +1,14 @@
+{
+  "name": "ag-credit-mutuel-netlify",
+  "version": "1.0.0",
+  "description": "AG Credit Mutuel - Deployed on Netlify with Firebase",
+  "scripts": {
+    "dev": "netlify dev"
+  },
+  "dependencies": {
+    "firebase": "^10.8.1"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
+  }
+}
