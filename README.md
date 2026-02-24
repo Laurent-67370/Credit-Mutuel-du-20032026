@@ -56,12 +56,12 @@ netlify deploy --prod
 credit-mutuel-ag-2026/
 ├── index.html              # Frontend principal
 ├── README.md              # Ce fichier
-├── netlify.toml           # Configuration Netlify (optionnel)
-├── package.json           # Dépendances Node.js
 └── netlify/
     └── functions/
         └── api.js         # API Serverless (GET, POST, PUT, DELETE)
 ```
+
+⚠️ **Important :** Le fichier `netlify.toml` n'est pas nécessaire. La configuration des fonctions Netlify se fait via les variables d'environnement dans le dashboard Netlify.
 
 ## 🎨 Customisation
 
