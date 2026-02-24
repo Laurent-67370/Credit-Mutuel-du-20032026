@@ -187,7 +187,7 @@
                     <div class="refresh-bar">
                         <div class="refresh-info">
                             <span class="refresh-dot"></span>
-                            Sync auto : <span id="countdownDisplay" style="font-size:0.75rem;color:#64748b;">30s</span>
+                            Synchro temps réel active 🔄
                         </div>
                         <button class="btn-refresh" id="refreshBtn" onclick="manualRefresh()">🔄 Actualiser maintenant</button>
                     </div>
@@ -264,16 +264,29 @@
 
     <div id="notification"></div>
 
+    <!-- Firebase Realtime SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-database-compat.js"></script>
     <script>
-        // 🔗 URL de l'API Netlify Functions
-        const SCRIPT_URL = "/.netlify/functions/api";
+        // 🔗 Configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyApJH6KoxUjKP-Mj3Xr-ZKjlAWZe31PI7Q",
+            authDomain: "credit-mutuel-ag-2026.firebaseapp.com",
+            databaseURL: "https://credit-mutuel-ag-2026-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "credit-mutuel-ag-2026",
+            storageBucket: "credit-mutuel-ag-2026.firebasestorage.app",
+            messagingSenderId: "120918886580",
+            appId: "1:120918886580:web:211c59e44bb2ad8216efe1"
+        };
 
-        const AUTO_REFRESH_SECONDS = 30;
+        // Initialiser Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        const API_URL = "/.netlify/functions/api";
 
         let volunteers = [];
         let torchonsCount = 0;
-        let countdown = AUTO_REFRESH_SECONDS;
-        let countdownInterval = null;
 
         const tableBody = document.getElementById('tableBody');
         const emptyState = document.getElementById('emptyState');
@@ -283,6 +296,17 @@
         const editModal = document.getElementById('editModal');
         const editForm = document.getElementById('editForm');
         const editSubmitBtn = document.getElementById('editSubmitBtn');
+
+        // 🔥 Écoute en temps réel des changements Firebase
+        const volunteersRef = database.ref('volunteers');
+        
+        volunteersRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            volunteers = data ? Object.values(data) : [];
+            renderTable();
+            updateLastUpdateTime();
+            updateStats();
+        });
 
         function showNotification(msg, type) {
             const n = document.getElementById('notification');
@@ -297,21 +321,13 @@
             const h = now.getHours().toString().padStart(2,'0');
             const m = now.getMinutes().toString().padStart(2,'0');
             const s = now.getSeconds().toString().padStart(2,'0');
-            document.getElementById('lastUpdate').textContent = `Mise à jour : ${h}:${m}:${s}`;
+            document.getElementById('lastUpdate').textContent = `🔄 Synchro temps réel : ${h}:${m}:${s}`;
         }
 
-        function startCountdown() {
-            if (countdownInterval) clearInterval(countdownInterval);
-            countdown = AUTO_REFRESH_SECONDS;
-            document.getElementById('countdownDisplay').textContent = countdown + 's';
-            countdownInterval = setInterval(() => {
-                countdown--;
-                document.getElementById('countdownDisplay').textContent = countdown + 's';
-                if (countdown <= 0) loadData(false);
-            }, 1000);
+        function manualRefresh() { 
+            showNotification('🔄 Synchronisation en temps réel active', 'info');
+            setTimeout(() => loadData(true), 1000);
         }
-
-        function manualRefresh() { loadData(true); }
 
         function openEditModal(volunteer) {
             document.getElementById('editId').value = volunteer.id;
@@ -337,14 +353,12 @@
             const tshirt = document.getElementById('editTshirt').value;
 
             if (!name) { showNotification('Veuillez saisir un nom.', 'error'); return; }
-            // Les créneaux sont maintenant optionnels
-            // if (!time18 && !time19) { showNotification('Veuillez sélectionner au moins un créneau.', 'error'); return; }
 
             const original = editSubmitBtn.textContent;
             editSubmitBtn.textContent = '⏳ Enregistrement...';
             editSubmitBtn.disabled = true;
 
-            fetch(SCRIPT_URL, {
+            fetch(API_URL, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id, name, time18, time19, persons, tshirt })
@@ -354,7 +368,6 @@
                 if (data.success) {
                     closeEditModal();
                     showNotification('✅ Modifications enregistrées avec succès !', 'success');
-                    setTimeout(() => loadData(false), 1000);
                 } else {
                     throw new Error(data.error || 'Erreur inconnue');
                 }
@@ -372,7 +385,7 @@
                 return;
             }
 
-            fetch(`${SCRIPT_URL}/${id}`, {
+            fetch(`${API_URL}/${id}`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' }
             })
@@ -380,7 +393,6 @@
             .then(data => {
                 if (data.success) {
                     showNotification(`✅ ${name} supprimé avec succès`, 'success');
-                    setTimeout(() => loadData(false), 1000);
                 } else {
                     throw new Error(data.error || 'Erreur inconnue');
                 }
@@ -396,13 +408,12 @@
             tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:#004B87">⏳ Chargement depuis Firebase...</td></tr>';
             emptyState.style.display = 'none';
 
-            fetch(SCRIPT_URL)
+            fetch(API_URL)
                 .then(res => res.json())
                 .then(data => {
                     volunteers = data || [];
                     renderTable();
                     updateLastUpdateTime();
-                    startCountdown();
                     if (showFeedback) showNotification('✅ Liste mise à jour !', 'info');
                     refreshBtn.textContent = '🔄 Actualiser maintenant';
                     refreshBtn.disabled = false;
@@ -410,7 +421,6 @@
                 .catch(err => {
                     console.error(err);
                     tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:#dc2626;font-size:0.9rem">⚠️ Connexion impossible. Vérifiez votre connexion internet.</td></tr>';
-                    startCountdown();
                     refreshBtn.textContent = '🔄 Actualiser maintenant';
                     refreshBtn.disabled = false;
                 });
@@ -448,7 +458,6 @@
                     tableBody.appendChild(row);
                 });
             }
-            updateStats();
         }
 
         function updateStats() {
@@ -472,14 +481,12 @@
             const tshirt = document.getElementById('tshirt').value;
 
             if (!name) { showNotification('Veuillez saisir un nom.', 'error'); return; }
-            // Les créneaux sont maintenant optionnels
-            // if (!time18 && !time19) { showNotification('Veuillez sélectionner au moins un créneau.', 'error'); return; }
 
             const original = submitBtn.textContent;
             submitBtn.textContent = '⏳ Enregistrement...';
             submitBtn.disabled = true;
 
-            fetch(SCRIPT_URL, {
+            fetch(API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, time18, time19, persons, tshirt })
@@ -492,7 +499,6 @@
                     showNotification('✅ Inscription enregistrée avec succès !', 'success');
                     submitBtn.textContent = '✅ Validé !';
                     setTimeout(() => { submitBtn.textContent = original; submitBtn.disabled = false; }, 2500);
-                    setTimeout(() => loadData(false), 1500);
                 } else {
                     throw new Error(data.error || 'Erreur inconnue');
                 }
@@ -526,7 +532,8 @@
             }
         });
 
-        loadData(false);
+        // Chargement initial
+        loadData(true);
     </script>
 </body>
 </html>
