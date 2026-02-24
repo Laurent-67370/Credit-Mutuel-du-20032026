@@ -5,95 +5,693 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Service A.G. Crédit Mutuel</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #f8fafc; color: #1e293b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; padding-bottom: 40px; }
+        :root {
+            --primary: #004B87;
+            --primary-dark: #003a6b;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #0ea5e9;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
 
-        header { background: #004B87; color: white; padding: 24px 16px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-        .header-inner { max-width: 1100px; margin: auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; }
-        header h1 { font-size: clamp(1.2rem, 4vw, 1.8rem); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        header p { color: #93c5fd; margin-top: 4px; font-size: 0.9rem; }
-        .header-info { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); padding: 12px 16px; border-radius: 10px; font-size: 0.85rem; max-width: 320px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            background: var(--bg); 
+            color: var(--text-primary); 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            min-height: 100vh; 
+            padding-bottom: 40px; 
+        }
+
+        header { 
+            background: var(--primary); 
+            color: white; 
+            padding: 24px 16px; 
+            margin-bottom: 24px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
+        }
+        
+        .header-inner { 
+            max-width: 1100px; 
+            margin: auto; 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: space-between; 
+            align-items: center; 
+            gap: 16px; 
+        }
+        
+        header h1 { 
+            font-size: clamp(1.2rem, 4vw, 1.8rem); 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+        }
+        
+        header p { 
+            color: #93c5fd; 
+            margin-top: 4px; 
+            font-size: 0.9rem; 
+        }
+        
+        .header-info { 
+            background: rgba(255,255,255,0.12); 
+            border: 1px solid rgba(255,255,255,0.2); 
+            padding: 12px 16px; 
+            border-radius: 10px; 
+            font-size: 0.85rem; 
+            max-width: 320px; 
+        }
+        
         .header-info strong { color: #8CC63F; }
 
-        .btn-sheet { display: inline-flex; align-items: center; gap: 8px; background: #1a8754; color: white; text-decoration: none; padding: 9px 16px; border-radius: 10px; font-size: 0.85rem; font-weight: 700; border: 2px solid rgba(255,255,255,0.3); transition: background 0.2s; margin-top: 8px; }
-        .btn-sheet:hover { background: #157347; }
+        .btn-sheet { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 8px; 
+            background: #1a8754; 
+            color: white; 
+            text-decoration: none; 
+            padding: 9px 16px; 
+            border-radius: 10px; 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            border: 2px solid rgba(255,255,255,0.3); 
+            transition: background 0.2s, transform 0.2s; 
+            margin-top: 8px; 
+        }
+        
+        .btn-sheet:hover { 
+            background: #157347; 
+            transform: translateY(-2px);
+        }
+        
         .btn-sheet svg { width: 18px; height: 18px; flex-shrink: 0; }
 
-        main { max-width: 1100px; margin: auto; padding: 0 16px; display: grid; grid-template-columns: 1fr 2fr; gap: 24px; }
-        @media (max-width: 768px) { main { grid-template-columns: 1fr; } }
+        .btn-help { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 6px; 
+            background: var(--info); 
+            color: white; 
+            border: none; 
+            border-radius: 20px; 
+            padding: 10px 18px; 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            box-shadow: 0 2px 8px rgba(14,165,233,0.2);
+        }
+        
+        .btn-help:hover { 
+            background: #0284c7; 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(14,165,233,0.3);
+        }
 
-        .card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-        .card h2 { font-size: 1.1rem; font-weight: 700; color: #1e293b; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9; margin-bottom: 16px; }
+        main { 
+            max-width: 1100px; 
+            margin: auto; 
+            padding: 0 16px; 
+            display: grid; 
+            grid-template-columns: 1fr 2fr; 
+            gap: 24px; 
+        }
+        
+        @media (max-width: 768px) { 
+            main { grid-template-columns: 1fr; } 
+        }
 
-        .form-group { margin-bottom: 14px; }
-        label { display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 5px; }
-        input[type="text"], input[type="number"], select { width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 9px 12px; font-size: 0.95rem; outline: none; transition: border 0.2s; }
-        input:focus, select:focus { border-color: #004B87; box-shadow: 0 0 0 3px rgba(0,75,135,0.1); }
+        .card { 
+            background: var(--surface); 
+            border-radius: 16px; 
+            border: 1px solid var(--border); 
+            padding: 24px; 
+            box-shadow: var(--shadow); 
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .card h2 { 
+            font-size: 1.1rem; 
+            font-weight: 700; 
+            color: var(--text-primary); 
+            padding-bottom: 12px; 
+            border-bottom: 2px solid #f1f5f9; 
+            margin-bottom: 16px; 
+        }
+
+        .form-group { margin-bottom: 16px; }
+        
+        label { 
+            display: block; 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            color: var(--text-primary); 
+            margin-bottom: 6px; 
+        }
+        
+        input[type="text"], input[type="number"], select { 
+            width: 100%; 
+            border: 2px solid var(--border); 
+            border-radius: 10px; 
+            padding: 12px 14px; 
+            font-size: 0.95rem; 
+            outline: none; 
+            transition: border-color 0.2s, box-shadow 0.2s; 
+        }
+        
+        input:focus, select:focus { 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 4px rgba(0,75,135,0.1); 
+        }
+        
         .checkbox-row { display: flex; gap: 12px; }
-        .checkbox-label { display: flex; align-items: center; gap: 8px; cursor: pointer; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; flex: 1; font-weight: 600; transition: background 0.2s; }
-        .checkbox-label:hover { background: #eff6ff; border-color: #004B87; }
-        .checkbox-label input[type="checkbox"] { width: 16px; height: 16px; accent-color: #004B87; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .btn-submit { width: 100%; margin-top: 6px; background: #004B87; color: white; border: none; border-radius: 10px; padding: 13px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
-        .btn-submit:hover { background: #003a6b; }
-        .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
+        
+        .checkbox-label { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            cursor: pointer; 
+            background: #f8fafc; 
+            border: 2px solid var(--border); 
+            border-radius: 10px; 
+            padding: 12px 16px; 
+            flex: 1; 
+            font-weight: 600; 
+            transition: all 0.2s; 
+        }
+        
+        .checkbox-label:hover { 
+            background: #eff6ff; 
+            border-color: var(--primary); 
+            transform: translateY(-2px);
+        }
+        
+        .checkbox-label input[type="checkbox"] { 
+            width: 18px; 
+            height: 18px; 
+            accent-color: var(--primary); 
+        }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        
+        .btn-submit { 
+            width: 100%; 
+            margin-top: 12px; 
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            padding: 14px; 
+            font-size: 1rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            box-shadow: 0 4px 8px rgba(0,75,135,0.2);
+        }
+        
+        .btn-submit:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,75,135,0.3);
+        }
+        
+        .btn-submit:disabled { 
+            opacity: 0.6; 
+            cursor: not-allowed; 
+            transform: none;
+        }
 
-        .torchon-card { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 20px; text-align: center; }
-        .torchon-icon { width: 48px; height: 48px; background: #ffedd5; color: #ea580c; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 12px; }
-        .torchon-card h3 { font-weight: 700; color: #9a3412; margin-bottom: 8px; }
-        .torchon-card p { font-size: 0.85rem; color: #c2410c; margin-bottom: 14px; }
-        .torchon-input-row { display: flex; gap: 8px; justify-content: center; align-items: center; }
-        .torchon-input-row input { width: 70px; border: 1px solid #fdba74; border-radius: 8px; padding: 8px; text-align: center; font-weight: 700; color: #9a3412; font-size: 1rem; outline: none; }
-        .btn-torchon { background: #ea580c; color: white; border: none; border-radius: 8px; padding: 9px 14px; font-weight: 700; cursor: pointer; }
-        .btn-torchon:hover { background: #c2410c; }
-        .torchon-total { margin-top: 12px; font-weight: 700; color: #9a3412; font-size: 1rem; }
-        .torchon-total span { font-size: 1.6rem; color: #ea580c; }
+        .help-tip {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-left: 4px solid var(--info);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-top: 12px;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
-        .stat-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-        .stat-label { font-size: 0.78rem; color: #64748b; font-weight: 600; margin-bottom: 4px; }
-        .stat-value { font-size: 2rem; font-weight: 800; color: #004B87; }
-        .stat-value.dark { color: #1e293b; }
+        .help-tip strong {
+            color: var(--primary);
+            font-weight: 700;
+        }
 
-        .refresh-bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px; gap: 10px; flex-wrap: wrap; }
-        .refresh-info { font-size: 0.8rem; color: #0369a1; display: flex; align-items: center; gap: 6px; }
-        .refresh-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; display: inline-block; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+        .torchon-card { 
+            background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); 
+            border: 1px solid #fed7aa; 
+            border-radius: 16px; 
+            padding: 24px; 
+            text-align: center; 
+            box-shadow: var(--shadow); 
+        }
+        
+        .torchon-icon { 
+            width: 56px; 
+            height: 56px; 
+            background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%); 
+            color: #ea580c; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1.6rem; 
+            margin: 0 auto 16px; 
+            box-shadow: 0 2px 8px rgba(234, 88, 12, 0.15);
+        }
+        
+        .torchon-card h3 { 
+            font-weight: 700; 
+            color: #9a3412; 
+            margin-bottom: 12px; 
+            font-size: 1.05rem;
+        }
+        
+        .torchon-card p { 
+            font-size: 0.9rem; 
+            color: #c2410c; 
+            margin-bottom: 16px; 
+            line-height: 1.5;
+        }
+        
+        .torchon-input-row { display: flex; gap: 12px; justify-content: center; align-items: center; }
+        
+        .torchon-input-row input { 
+            width: 80px; 
+            border: 2px solid #fdba74; 
+            border-radius: 10px; 
+            padding: 10px 12px; 
+            text-align: center; 
+            font-weight: 700; 
+            color: #9a3412; 
+            font-size: 1.1rem; 
+            outline: none; 
+            transition: border-color 0.2s;
+        }
+        
+        .torchon-input-row input:focus {
+            border-color: #ea580c;
+            box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
+        }
+        
+        .btn-torchon { 
+            background: #ea580c; 
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            padding: 10px 20px; 
+            font-size: 0.95rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.2s;
+        }
+        
+        .btn-torchon:hover { 
+            background: #c2410c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(234, 88, 12, 0.3);
+        }
+        
+        .torchon-total { 
+            margin-top: 16px; 
+            font-weight: 700; 
+            color: #9a3412; 
+            font-size: 1.1rem;
+        }
+        
+        .torchon-total span { 
+            font-size: 1.8rem; 
+            color: #ea580c; 
+        }
 
-        .table-wrapper { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; }
-        thead tr { background: #f8fafc; }
-        th { padding: 11px 16px; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #e2e8f0; text-align: left; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+        
+        .stat-card { 
+            background: var(--surface); 
+            border: 1px solid var(--border); 
+            border-radius: 16px; 
+            padding: 20px; 
+            text-align: center; 
+            box-shadow: var(--shadow);
+            transition: all 0.2s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .stat-label { 
+            font-size: 0.8rem; 
+            color: var(--text-secondary); 
+            font-weight: 600; 
+            margin-bottom: 6px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.05em;
+        }
+        
+        .stat-value { 
+            font-size: 2.2rem; 
+            font-weight: 800; 
+            color: var(--primary); 
+            line-height: 1;
+        }
+        
+        .stat-value.dark { color: var(--text-primary); }
+
+        .refresh-bar { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 12px 20px; 
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); 
+            border: 1px solid #bae6fd; 
+            border-radius: 12px; 
+            gap: 12px; 
+            flex-wrap: wrap; 
+        }
+        
+        .refresh-info { 
+            font-size: 0.85rem; 
+            color: #0369a1; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            font-weight: 600;
+        }
+        
+        .refresh-dot { 
+            width: 10px; 
+            height: 10px; 
+            border-radius: 50%; 
+            background: var(--success); 
+            display: inline-block; 
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse { 
+            0%,100%{opacity:1; transform: scale(1);} 
+            50%{opacity:0.4; transform: scale(0.8);} 
+        }
+
+        .table-wrapper { 
+            overflow-x: auto; 
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+        }
+        
+        thead tr { 
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); 
+        }
+        
+        th { 
+            padding: 14px 18px; 
+            font-size: 0.75rem; 
+            font-weight: 700; 
+            color: var(--text-secondary); 
+            text-transform: uppercase; 
+            letter-spacing: 0.05em; 
+            border-bottom: 2px solid var(--border); 
+            text-align: left;
+        }
+        
         th.center, td.center { text-align: center; }
-        td { padding: 11px 16px; font-size: 0.9rem; color: #334155; border-bottom: 1px solid #f1f5f9; }
-        tr:hover td { background: #f8fafc; }
-        .badge-ok { background: #dcfce7; color: #15803d; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
-        .badge-tshirt { background: #fff7ed; color: #c2410c; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
-        .btn-edit { background: #f59e0b; color: white; border: none; border-radius: 6px; padding: 6px 10px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: background 0.2s; margin-right: 4px; }
-        .btn-edit:hover { background: #d97706; }
-        .btn-delete { background: #ef4444; color: white; border: none; border-radius: 6px; padding: 6px 10px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
-        .btn-delete:hover { background: #dc2626; }
+        
+        td { 
+            padding: 14px 18px; 
+            font-size: 0.9rem; 
+            color: var(--text-primary); 
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        tr:hover td { 
+            background: #f8fafc; 
+        }
+        
+        .badge-ok { 
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); 
+            color: #15803d; 
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            font-size: 0.75rem; 
+            font-weight: 700; 
+            box-shadow: 0 2px 4px rgba(22, 163, 74, 0.2);
+        }
+        
+        .badge-tshirt { 
+            background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); 
+            color: #c2410c; 
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            font-size: 0.75rem; 
+            font-weight: 700; 
+            box-shadow: 0 2px 4px rgba(234, 88, 12, 0.2);
+        }
+        
+        .btn-edit { 
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            padding: 8px 14px; 
+            font-size: 0.75rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            margin-right: 6px;
+        }
+        
+        .btn-edit:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+        }
+        
+        .btn-delete { 
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            padding: 8px 14px; 
+            font-size: 0.75rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.2s;
+        }
+        
+        .btn-delete:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3);
+        }
 
-        #emptyState { padding: 40px; text-align: center; color: #94a3b8; }
-        #notification { position: fixed; top: 20px; right: 20px; padding: 14px 20px; border-radius: 10px; font-weight: 600; font-size: 0.9rem; display: none; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-width: 90vw; }
-        #notification.success { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
-        #notification.error { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
-        #notification.info { background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; }
+        #emptyState { 
+            padding: 60px 40px; 
+            text-align: center; 
+            color: var(--text-secondary); 
+        }
+        
+        #notification { 
+            position: fixed; 
+            top: 24px; 
+            right: 24px; 
+            padding: 16px 24px; 
+            border-radius: 12px; 
+            font-weight: 600; 
+            font-size: 0.9rem; 
+            display: none; 
+            z-index: 2000; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2); 
+            max-width: 90vw; 
+            backdrop-filter: blur(10px);
+        }
+        
+        #notification.success { 
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); 
+            color: #15803d; 
+            border: 2px solid #86efac;
+        }
+        
+        #notification.error { 
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); 
+            color: #dc2626; 
+            border: 2px solid #fca5a5;
+        }
+        
+        #notification.info { 
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); 
+            color: #0369a1; 
+            border: 2px solid #7dd3fc;
+        }
 
         /* Modal d'édition */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
-        .modal-overlay.active { display: flex; }
-        .modal { background: white; border-radius: 12px; padding: 24px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .modal-header h3 { font-size: 1.2rem; font-weight: 700; color: #1e293b; }
-        .btn-close { background: #94a3b8; color: white; border: none; border-radius: 6px; padding: 8px 12px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
-        .btn-close:hover { background: #64748b; }
-        .btn-modal-cancel { background: #94a3b8; color: white; border: none; border-radius: 10px; padding: 13px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
-        .btn-modal-cancel:hover { background: #64748b; }
-        .btn-modal-save { background: #004B87; color: white; border: none; border-radius: 10px; padding: 13px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
-        .btn-modal-save:hover { background: #003a6b; }
-        .modal-buttons { display: flex; gap: 12px; margin-top: 16px; }
-        .modal-buttons button { flex: 1; }
+        .modal-overlay { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.6); 
+            backdrop-filter: blur(4px);
+            z-index: 3000; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px; 
+        }
+        
+        .modal-overlay.active { 
+            display: flex; 
+        }
+        
+        .modal { 
+            background: var(--surface); 
+            border-radius: 20px; 
+            padding: 32px; 
+            max-width: 550px; 
+            width: 100%; 
+            max-height: 90vh; 
+            overflow-y: auto; 
+            box-shadow: 0 12px 48px rgba(0,0,0,0.3); 
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .modal-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 24px; 
+            padding-bottom: 20px; 
+            border-bottom: 2px solid #f1f5f9;
+        }
+        
+        .modal-header h3 { 
+            font-size: 1.3rem; 
+            font-weight: 700; 
+            color: var(--text-primary);
+        }
+        
+        .btn-close { 
+            background: var(--text-secondary); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            padding: 10px 16px; 
+            font-size: 0.9rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.2s;
+        }
+        
+        .btn-close:hover { 
+            background: #475569; 
+            transform: scale(1.1);
+        }
+        
+        .btn-modal-cancel { 
+            background: var(--text-secondary); 
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            padding: 14px; 
+            font-size: 1rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.2s;
+        }
+        
+        .btn-modal-cancel:hover { 
+            background: #475569; 
+            transform: translateY(-2px);
+        }
+        
+        .btn-modal-save { 
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); 
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            padding: 14px; 
+            font-size: 1rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.2s;
+        }
+        
+        .btn-modal-save:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,75,135,0.3);
+        }
+        
+        .modal-buttons { 
+            display: flex; 
+            gap: 16px; 
+            margin-top: 24px; 
+        }
+        
+        .modal-buttons button { 
+            flex: 1; 
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal {
+                padding: 20px;
+                margin: 20px;
+            }
+            
+            .btn-edit, .btn-delete {
+                padding: 6px 10px;
+                font-size: 0.7rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -103,46 +701,60 @@
             <div>
                 <h1>Service A.G. du Crédit Mutuel</h1>
                 <p>📅 Vendredi 20 Mars 2026</p>
-                <a class="btn-sheet" href="https://firebase.google.com/docs/database" target="_blank">
-                    <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                    </svg>
-                    Firebase Database
-                </a>
+                <div style="margin-top: 12px;">
+                    <a class="btn-sheet" href="https://firebase.google.com/docs/database" target="_blank">
+                        <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                        Firebase Database
+                    </a>
+                    <a class="btn-help" onclick="toggleHelp()" style="margin-left: 12px;">
+                        ❓ Aide
+                    </a>
+                </div>
             </div>
             <div class="header-info">
                 <p><strong>👕 Info T-Shirt :</strong></p>
-                <p style="margin-top:4px">1ère fois ? Notez votre taille.<br>Anciens ? Mettez celui de l'année dernière (vert pomme).</p>
+                <p style="margin-top:6px; line-height: 1.4;">1ère fois ? Notez ta taille.<br>Anciens ? Portez votre vert pomme !</p>
             </div>
         </div>
     </header>
 
     <main>
-        <div style="display:flex; flex-direction:column; gap:20px;">
+        <div style="display:flex; flex-direction:column; gap:24px;">
             <div class="card">
                 <h2>👤 S'inscrire</h2>
+                
+                <div class="help-tip">
+                    <strong>💡</strong>
+                    <div>
+                        <p style="margin-bottom: 6px;">Tu ne connais pas encore tes disponibilités ? Pas de problème !</p>
+                        <p>1. Remplis juste ton nom et le nombre de personnes</p>
+                        <p>2. Clique sur <strong>✏️ Modifier</strong> plus tard pour ajouter tes créneaux</p>
+                    </div>
+                </div>
+
                 <form id="registrationForm">
                     <div class="form-group">
-                        <label>Nom / Prénom</label>
+                        <label>Nom / Prénom *</label>
                         <input type="text" id="name" required placeholder="Ex: Jean Dupont">
                     </div>
                     <div class="form-group">
-                        <label>Disponibilité (Créneaux) <span style="font-weight:400; color:#64748b;">- Optionnel</span></label>
+                        <label>Disponibilité (Créneaux) <span style="font-weight:400; color:var(--text-secondary);">- Optionnel</span></label>
                         <div class="checkbox-row">
                             <label class="checkbox-label"><input type="checkbox" id="time18"> 18H</label>
                             <label class="checkbox-label"><input type="checkbox" id="time19"> 19H</label>
                         </div>
-                        <p style="font-size:0.75rem; color:#64748b; margin-top:5px;">💡 Tu peux indiquer ton nom maintenant et préciser tes créneaux plus tard en cliquant sur ✏️ Modifier</p>
                     </div>
                     <div class="grid-2">
                         <div class="form-group">
-                            <label>Nbr de pers.</label>
+                            <label>Nombre de personnes *</label>
                             <input type="number" id="persons" required min="1" value="1">
                         </div>
                         <div class="form-group">
-                            <label>T-Shirt</label>
+                            <label>Taille de T-shirt</label>
                             <select id="tshirt">
-                                <option value="OK">Déjà un (OK)</option>
+                                <option value="OK">Déjà un (vert pomme)</option>
                                 <option value="S">Taille S</option>
                                 <option value="M">Taille M</option>
                                 <option value="L">Taille L</option>
@@ -159,28 +771,37 @@
             <div class="torchon-card">
                 <div class="torchon-icon">🧻</div>
                 <h3>Appel aux Torchons !</h3>
-                <p>Nous avons besoin de 40 exemplaires. Si vous en avez, indiquez le nombre ci-dessous.</p>
+                <p>Nous avons besoin de 40 exemplaires pour l'AG.</p>
                 <div class="torchon-input-row">
-                    <input type="number" id="torchonsInput" min="0" value="0">
-                    <button class="btn-torchon" onclick="updateTorchons()">Ajouter</button>
+                    <input type="number" id="torchonsInput" min="0" value="0" placeholder="0">
+                    <button class="btn-torchon" onclick="updateTorchons()">➕ Ajouter</button>
                 </div>
                 <p class="torchon-total">Total récolté : <span id="torchonsTotal">0</span>/40</p>
             </div>
         </div>
 
-        <div style="display:flex; flex-direction:column; gap:20px;">
+        <div style="display:flex; flex-direction:column; gap:24px;">
             <div class="stats-grid">
-                <div class="stat-card"><div class="stat-label">Total Personnes</div><div class="stat-value" id="totalPersons">0</div></div>
-                <div class="stat-card"><div class="stat-label">Créneau 18H</div><div class="stat-value dark" id="total18h">0</div></div>
-                <div class="stat-card"><div class="stat-label">Créneau 19H</div><div class="stat-value dark" id="total19h">0</div></div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Participants</div>
+                    <div class="stat-value" id="totalPersons">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Dispo 18H</div>
+                    <div class="stat-value dark" id="total18h">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Dispo 19H</div>
+                    <div class="stat-value dark" id="total19h">0</div>
+                </div>
             </div>
 
-            <div style="background:white; border:1px solid #e2e8f0; border-radius:12px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.06);">
-                <div style="padding:14px 20px; border-bottom:1px solid #f1f5f9; background:#f8fafc; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                    <h2 style="font-size:1rem; font-weight:700;">📋 Liste des volontaires</h2>
-                    <span id="lastUpdate" style="font-size:0.75rem; color:#94a3b8;"></span>
+            <div style="background:var(--surface); border:1px solid var(--border); border-radius:16px; overflow:hidden; box-shadow:var(--shadow);">
+                <div style="padding:16px 24px; border-bottom:2px solid #f1f5f9; background:linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                    <h2 style="font-size:1.1rem; font-weight:700;">📋 Liste des volontaires</h2>
+                    <span id="lastUpdate" style="font-size:0.8rem; color:var(--text-secondary); font-weight:600;"></span>
                 </div>
-                <div style="padding: 10px 16px; border-bottom:1px solid #f1f5f9;">
+                <div style="padding: 12px 20px; border-bottom:1px solid #f1f5f9;">
                     <div class="refresh-bar">
                         <div class="refresh-info">
                             <span class="refresh-dot"></span>
@@ -205,12 +826,61 @@
                     </table>
                 </div>
                 <div id="emptyState">
-                    <div style="font-size:2.5rem">📋</div>
-                    <p style="margin-top:8px">Aucun inscrit pour le moment.</p>
+                    <div style="font-size:3rem; margin-bottom:16px;">📋</div>
+                    <p style="margin-top:8px; font-size:1rem;">Aucun inscrit pour le moment.</p>
+                    <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:12px;">Soyez le premier à vous inscrire !</p>
                 </div>
             </div>
         </div>
     </main>
+
+    <!-- Modal d'aide -->
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>❓ Guide d'utilisation</h3>
+                <button class="btn-close" onclick="toggleHelp()">✕</button>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <h4 style="margin-bottom: 12px; color: var(--primary);">📝 Comment s'inscrire</h4>
+                <ol style="margin-left: 20px; line-height: 1.8; color: var(--text-primary);">
+                    <li style="margin-bottom: 8px;"><strong>Entrez votre nom</strong> et le nombre de personnes qui viendront avec vous</li>
+                    <li style="margin-bottom: 8px;"><strong>Cochez vos créneaux</strong> : 18H et/ou 19H (optionnel si vous ne savez pas encore)</li>
+                    <li style="margin-bottom: 8px;"><strong>Choisissez votre taille</strong> si c'est votre première fois</li>
+                    <li style="margin-bottom: 8px;"><strong>Cliquez sur "Valider"</strong> pour enregistrer</li>
+                </ol>
+
+                <h4 style="margin: 24px 0 12px; color: var(--primary);">✏️ Modifier son inscription</h4>
+                <ol style="margin-left: 20px; line-height: 1.8; color: var(--text-primary);">
+                    <li style="margin-bottom: 8px;">Cliquez sur le bouton <strong>✏️ Modifier</strong> à côté de votre nom dans la liste</li>
+                    <li style="margin-bottom: 8px;">Changez <strong>n'importe quelle information</strong> (nom, créneaux, nombre de personnes, taille)</li>
+                    <li style="margin-bottom: 8px;">Cliquez sur <strong>"💾 Enregistrer"</strong> pour sauvegarder</li>
+                </ol>
+
+                <h4 style="margin: 24px 0 12px; color: var(--primary);">🗑️ Se désinscrire</h4>
+                <ol style="margin-left: 20px; line-height: 1.8; color: var(--text-primary);">
+                    <li style="margin-bottom: 8px;">Cliquez sur le bouton <strong>🗑️ Supprimer</strong> à côté de votre nom</li>
+                    <li style="margin-bottom: 8px;"><strong>Confirmez</strong> la suppression dans la fenêtre qui s'affiche</li>
+                </ol>
+
+                <h4 style="margin: 24px 0 12px; color: var(--primary);">🔥 Synchronisation temps réel</h4>
+                <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 16px; border-radius: 10px; margin-top: 12px; line-height: 1.6;">
+                    <p style="margin-bottom: 8px;"><strong>✅ Mises à jour instantanées</strong> - Toutes les modifications sont visibles par tous les participants en temps réel !</p>
+                    <p style="margin-bottom: 8px;"><strong>✅ Pas de rafraîchissement</strong> - Plus besoin d'attendre 30 secondes pour voir les changements</p>
+                    <p><strong>✅ Compatible multi-écrans</strong> - Vous pouvez tous suivre la liste simultanément</p>
+                </div>
+
+                <h4 style="margin: 24px 0 12px; color: var(--warning);">⚠️ Conseils</h4>
+                <ul style="margin-left: 20px; line-height: 1.6; color: var(--text-primary);">
+                    <li style="margin-bottom: 6px;">💡 N'hésitez pas à <strong>vous inscrire sans connaître vos horaires</strong>, vous pourrez les préciser plus tard</li>
+                    <li style="margin-bottom: 6px;">📱 Le site est <strong>optimisé pour mobile</strong> - Fonctionne parfaitement sur smartphones</li>
+                    <li style="margin-bottom: 6px;">🔄 Vérifiez que <strong>votre nom apparaît bien</strong> après inscription</li>
+                    <li>❓ En cas de problème, cliquez sur le bouton <strong>❓ Aide</strong> en haut de la page</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal d'édition -->
     <div class="modal-overlay" id="editModal">
@@ -222,11 +892,11 @@
             <form id="editForm">
                 <input type="hidden" id="editId">
                 <div class="form-group">
-                    <label>Nom / Prénom</label>
+                    <label>Nom / Prénom *</label>
                     <input type="text" id="editName" required>
                 </div>
                 <div class="form-group">
-                    <label>Disponibilité (Créneaux) <span style="font-weight:400; color:#64748b;">- Optionnel</span></label>
+                    <label>Disponibilité (Créneaux) <span style="font-weight:400; color:var(--text-secondary);">- Optionnel</span></label>
                     <div class="checkbox-row">
                         <label class="checkbox-label"><input type="checkbox" id="editTime18"> 18H</label>
                         <label class="checkbox-label"><input type="checkbox" id="editTime19"> 19H</label>
@@ -234,13 +904,13 @@
                 </div>
                 <div class="grid-2">
                     <div class="form-group">
-                        <label>Nbr de pers.</label>
+                        <label>Nombre de personnes *</label>
                         <input type="number" id="editPersons" required min="1" value="1">
                     </div>
                     <div class="form-group">
-                        <label>T-Shirt</label>
+                        <label>Taille de T-shirt</label>
                         <select id="editTshirt">
-                            <option value="OK">Déjà un (OK)</option>
+                            <option value="OK">Déjà un (vert pomme)</option>
                             <option value="S">Taille S</option>
                             <option value="M">Taille M</option>
                             <option value="L">Taille L</option>
@@ -291,6 +961,7 @@
         const editModal = document.getElementById('editModal');
         const editForm = document.getElementById('editForm');
         const editSubmitBtn = document.getElementById('editSubmitBtn');
+        const helpModal = document.getElementById('helpModal');
 
         // 🔥 Écoute en temps réel des changements Firebase
         const volunteersRef = database.ref('volunteers');
@@ -302,6 +973,10 @@
             updateLastUpdateTime();
             updateStats();
         });
+
+        function toggleHelp() {
+            helpModal.classList.toggle('active');
+        }
 
         function showNotification(msg, type) {
             const n = document.getElementById('notification');
@@ -316,7 +991,7 @@
             const h = now.getHours().toString().padStart(2,'0');
             const m = now.getMinutes().toString().padStart(2,'0');
             const s = now.getSeconds().toString().padStart(2,'0');
-            document.getElementById('lastUpdate').textContent = `🔥 Synchro temps réel : ${h}:${m}:${s}`;
+            document.getElementById('lastUpdate').textContent = `🔥 Synchro : ${h}:${m}:${s}`;
         }
 
         function openEditModal(volunteer) {
@@ -326,6 +1001,7 @@
             document.getElementById('editTime19').checked = volunteer.time19;
             document.getElementById('editPersons').value = volunteer.persons;
             document.getElementById('editTshirt').value = volunteer.tshirt;
+            editModal.classList.remove('active');
             editModal.classList.add('active');
         }
 
@@ -399,7 +1075,7 @@
                 emptyState.style.display = 'block';
             } else {
                 emptyState.style.display = 'none';
-                volunteers.forEach(v => {
+                volunteers.forEach((v, index) => {
                     const check = '<span style="color:#16a34a;font-weight:700">✓</span>';
                     const dash = '<span style="color:#cbd5e1">—</span>';
                     const t = (v.tshirt || '').toLowerCase();
@@ -407,6 +1083,8 @@
                                : (t && t !== '-') ? `<span class="badge-tshirt">${v.tshirt}</span>`
                                : dash;
                     const row = document.createElement('tr');
+                    row.className = 'fade-in';
+                    row.style.animationDelay = `${index * 0.05}s`;
                     row.innerHTML = `
                         <td style="font-weight:600">${v.name}</td>
                         <td class="center">${v.time18 ? check : dash}</td>
@@ -414,7 +1092,7 @@
                         <td class="center" style="font-weight:700">${v.persons}</td>
                         <td class="center">${tshirt}</td>
                         <td class="center">
-                            <button class="btn-edit" onclick="openEditModal(volunteers.find(v => v.id === '${v.id}'))">
+                            <button class="btn-edit" onclick="openEditModal(volunteers.find(vol => vol.id === '${v.id}'))">
                                 ✏️
                             </button>
                             <button class="btn-delete" onclick="deleteVolunteer('${v.id}', '${v.name.replace(/'/g, "\\'")}')">
@@ -492,15 +1170,21 @@
             }
         }
 
-        // Fermer le modal en cliquant en dehors
+        // Fermer les modals en cliquant en dehors
         editModal.addEventListener('click', function(e) {
             if (e.target === editModal) {
                 closeEditModal();
             }
         });
 
+        helpModal.addEventListener('click', function(e) {
+            if (e.target === helpModal) {
+                toggleHelp();
+            }
+        });
+
         // Afficher un message de chargement initial
-        tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:#004B87">🔥 Connexion à Firebase en temps réel...</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--primary);"><span style="font-size:1.1rem;">🔥</span> Connexion à Firebase en temps réel...</td></tr>';
         emptyState.style.display = 'none';
     </script>
 </body>
