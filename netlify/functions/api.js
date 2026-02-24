@@ -1,5 +1,5 @@
 const { initializeApp } = require('firebase/app');
-const { getDatabase, ref, set, push, get, child } = require('firebase/database');
+const { getDatabase, ref, set, push, get, remove } = require('firebase/database');
 
 const firebaseConfig = {
   apiKey: "AIzaSyApJH6KoxUjKP-Mj3Xr-ZKjlAWZe31PI7Q",
@@ -18,7 +18,7 @@ const database = getDatabase(firebaseApp);
 const headers = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
   'Content-Type': 'application/json'
 };
 
@@ -119,6 +119,43 @@ async function postHandler(event) {
   }
 }
 
+// Handler DELETE - Supprimer un volontaire
+async function deleteHandler(event) {
+  try {
+    console.log('[DELETE] Suppression d\'un volontaire');
+
+    const volunteerId = event.path.split('/').pop();
+
+    if (!volunteerId) {
+      console.log('[DELETE] Erreur: ID manquant');
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'ID du volontaire requis' })
+      };
+    }
+
+    // Supprimer l'entrée de Firebase
+    const volunteerRef = ref(database, `volunteers/${volunteerId}`);
+    await remove(volunteerRef);
+
+    console.log('[DELETE] Suppression réussie:', volunteerId);
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ success: true, id: volunteerId })
+    };
+  } catch (error) {
+    console.error('[DELETE] Erreur:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: 'Erreur lors de la suppression' })
+    };
+  }
+}
+
 // Handler principal
 exports.handler = async (event, context) => {
   const method = event.httpMethod;
@@ -129,6 +166,8 @@ exports.handler = async (event, context) => {
     return getHandler(event);
   } else if (method === 'POST') {
     return postHandler(event);
+  } else if (method === 'DELETE') {
+    return deleteHandler(event);
   } else {
     return {
       statusCode: 405,
