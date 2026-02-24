@@ -72,15 +72,31 @@
         tr:hover td { background: #f8fafc; }
         .badge-ok { background: #dcfce7; color: #15803d; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
         .badge-tshirt { background: #fff7ed; color: #c2410c; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .btn-edit { background: #f59e0b; color: white; border: none; border-radius: 6px; padding: 6px 10px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: background 0.2s; margin-right: 4px; }
+        .btn-edit:hover { background: #d97706; }
         .btn-delete { background: #ef4444; color: white; border: none; border-radius: 6px; padding: 6px 10px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
         .btn-delete:hover { background: #dc2626; }
-        .btn-delete:disabled { opacity: 0.5; cursor: not-allowed; }
 
         #emptyState { padding: 40px; text-align: center; color: #94a3b8; }
         #notification { position: fixed; top: 20px; right: 20px; padding: 14px 20px; border-radius: 10px; font-weight: 600; font-size: 0.9rem; display: none; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-width: 90vw; }
         #notification.success { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
         #notification.error { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
         #notification.info { background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; }
+
+        /* Modal d'édition */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: white; border-radius: 12px; padding: 24px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-header h3 { font-size: 1.2rem; font-weight: 700; color: #1e293b; }
+        .btn-close { background: #94a3b8; color: white; border: none; border-radius: 6px; padding: 8px 12px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+        .btn-close:hover { background: #64748b; }
+        .btn-modal-cancel { background: #94a3b8; color: white; border: none; border-radius: 10px; padding: 13px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+        .btn-modal-cancel:hover { background: #64748b; }
+        .btn-modal-save { background: #004B87; color: white; border: none; border-radius: 10px; padding: 13px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+        .btn-modal-save:hover { background: #003a6b; }
+        .modal-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .modal-buttons button { flex: 1; }
     </style>
 </head>
 <body>
@@ -185,7 +201,7 @@
                                 <th class="center">19H</th>
                                 <th class="center">Pers.</th>
                                 <th class="center">T-Shirt</th>
-                                <th class="center">Action</th>
+                                <th class="center">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="tableBody"></tbody>
@@ -198,6 +214,52 @@
             </div>
         </div>
     </main>
+
+    <!-- Modal d'édition -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>✏️ Modifier l'inscription</h3>
+                <button class="btn-close" onclick="closeEditModal()">✕</button>
+            </div>
+            <form id="editForm">
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label>Nom / Prénom</label>
+                    <input type="text" id="editName" required>
+                </div>
+                <div class="form-group">
+                    <label>Disponibilité (Créneaux)</label>
+                    <div class="checkbox-row">
+                        <label class="checkbox-label"><input type="checkbox" id="editTime18"> 18H</label>
+                        <label class="checkbox-label"><input type="checkbox" id="editTime19"> 19H</label>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Nbr de pers.</label>
+                        <input type="number" id="editPersons" required min="1" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label>T-Shirt</label>
+                        <select id="editTshirt">
+                            <option value="OK">Déjà un (OK)</option>
+                            <option value="S">Taille S</option>
+                            <option value="M">Taille M</option>
+                            <option value="L">Taille L</option>
+                            <option value="XL">Taille XL</option>
+                            <option value="XXL">Taille XXL</option>
+                            <option value="-">Ne sait pas</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-modal-cancel" onclick="closeEditModal()">Annuler</button>
+                    <button type="submit" class="btn-modal-save" id="editSubmitBtn">💾 Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <div id="notification"></div>
 
@@ -217,6 +279,9 @@
         const form = document.getElementById('registrationForm');
         const submitBtn = document.getElementById('submitBtn');
         const refreshBtn = document.getElementById('refreshBtn');
+        const editModal = document.getElementById('editModal');
+        const editForm = document.getElementById('editForm');
+        const editSubmitBtn = document.getElementById('editSubmitBtn');
 
         function showNotification(msg, type) {
             const n = document.getElementById('notification');
@@ -246,6 +311,59 @@
         }
 
         function manualRefresh() { loadData(true); }
+
+        function openEditModal(volunteer) {
+            document.getElementById('editId').value = volunteer.id;
+            document.getElementById('editName').value = volunteer.name;
+            document.getElementById('editTime18').checked = volunteer.time18;
+            document.getElementById('editTime19').checked = volunteer.time19;
+            document.getElementById('editPersons').value = volunteer.persons;
+            document.getElementById('editTshirt').value = volunteer.tshirt;
+            editModal.classList.add('active');
+        }
+
+        function closeEditModal() {
+            editModal.classList.remove('active');
+            editForm.reset();
+        }
+
+        function saveVolunteer() {
+            const id = document.getElementById('editId').value;
+            const name = document.getElementById('editName').value.trim();
+            const time18 = document.getElementById('editTime18').checked;
+            const time19 = document.getElementById('editTime19').checked;
+            const persons = document.getElementById('editPersons').value;
+            const tshirt = document.getElementById('editTshirt').value;
+
+            if (!name) { showNotification('Veuillez saisir un nom.', 'error'); return; }
+            if (!time18 && !time19) { showNotification('Veuillez sélectionner au moins un créneau.', 'error'); return; }
+
+            const original = editSubmitBtn.textContent;
+            editSubmitBtn.textContent = '⏳ Enregistrement...';
+            editSubmitBtn.disabled = true;
+
+            fetch(SCRIPT_URL, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, name, time18, time19, persons, tshirt })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    closeEditModal();
+                    showNotification('✅ Modifications enregistrées avec succès !', 'success');
+                    setTimeout(() => loadData(false), 1000);
+                } else {
+                    throw new Error(data.error || 'Erreur inconnue');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                showNotification("❌ Erreur lors de la modification.", 'error');
+                editSubmitBtn.textContent = original;
+                editSubmitBtn.disabled = false;
+            });
+        }
 
         function deleteVolunteer(id, name) {
             if (!confirm(`Êtes-vous sûr de vouloir supprimer ${name} ?`)) {
@@ -317,6 +435,9 @@
                         <td class="center" style="font-weight:700">${v.persons}</td>
                         <td class="center">${tshirt}</td>
                         <td class="center">
+                            <button class="btn-edit" onclick="openEditModal(volunteers.find(v => v.id === '${v.id}'))">
+                                ✏️
+                            </button>
                             <button class="btn-delete" onclick="deleteVolunteer('${v.id}', '${v.name.replace(/'/g, "\\'")}')">
                                 🗑️
                             </button>
@@ -381,6 +502,11 @@
             });
         });
 
+        editForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveVolunteer();
+        });
+
         function updateTorchons() {
             const val = parseInt(document.getElementById('torchonsInput').value);
             if (val > 0) {
@@ -389,6 +515,13 @@
                 document.getElementById('torchonsInput').value = 0;
             }
         }
+
+        // Fermer le modal en cliquant en dehors
+        editModal.addEventListener('click', function(e) {
+            if (e.target === editModal) {
+                closeEditModal();
+            }
+        });
 
         loadData(false);
     </script>
