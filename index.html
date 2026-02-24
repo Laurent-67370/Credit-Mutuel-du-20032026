@@ -72,6 +72,9 @@
         tr:hover td { background: #f8fafc; }
         .badge-ok { background: #dcfce7; color: #15803d; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
         .badge-tshirt { background: #fff7ed; color: #c2410c; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .btn-delete { background: #ef4444; color: white; border: none; border-radius: 6px; padding: 6px 10px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+        .btn-delete:hover { background: #dc2626; }
+        .btn-delete:disabled { opacity: 0.5; cursor: not-allowed; }
 
         #emptyState { padding: 40px; text-align: center; color: #94a3b8; }
         #notification { position: fixed; top: 20px; right: 20px; padding: 14px 20px; border-radius: 10px; font-weight: 600; font-size: 0.9rem; display: none; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-width: 90vw; }
@@ -182,6 +185,7 @@
                                 <th class="center">19H</th>
                                 <th class="center">Pers.</th>
                                 <th class="center">T-Shirt</th>
+                                <th class="center">Action</th>
                             </tr>
                         </thead>
                         <tbody id="tableBody"></tbody>
@@ -243,9 +247,33 @@
 
         function manualRefresh() { loadData(true); }
 
+        function deleteVolunteer(id, name) {
+            if (!confirm(`Êtes-vous sûr de vouloir supprimer ${name} ?`)) {
+                return;
+            }
+
+            fetch(`${SCRIPT_URL}/${id}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification(`✅ ${name} supprimé avec succès`, 'success');
+                    setTimeout(() => loadData(false), 1000);
+                } else {
+                    throw new Error(data.error || 'Erreur inconnue');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                showNotification("❌ Erreur lors de la suppression", 'error');
+            });
+        }
+
         function loadData(showFeedback = true) {
             if (showFeedback) { refreshBtn.textContent = '⏳ Chargement...'; refreshBtn.disabled = true; }
-            tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:24px;color:#004B87">⏳ Chargement depuis Firebase...</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:#004B87">⏳ Chargement depuis Firebase...</td></tr>';
             emptyState.style.display = 'none';
 
             fetch(SCRIPT_URL)
@@ -261,7 +289,7 @@
                 })
                 .catch(err => {
                     console.error(err);
-                    tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:24px;color:#dc2626;font-size:0.9rem">⚠️ Connexion impossible. Vérifiez votre connexion internet.</td></tr>';
+                    tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:#dc2626;font-size:0.9rem">⚠️ Connexion impossible. Vérifiez votre connexion internet.</td></tr>';
                     startCountdown();
                     refreshBtn.textContent = '🔄 Actualiser maintenant';
                     refreshBtn.disabled = false;
@@ -288,6 +316,11 @@
                         <td class="center">${v.time19 ? check : dash}</td>
                         <td class="center" style="font-weight:700">${v.persons}</td>
                         <td class="center">${tshirt}</td>
+                        <td class="center">
+                            <button class="btn-delete" onclick="deleteVolunteer('${v.id}', '${v.name.replace(/'/g, "\\'")}')">
+                                🗑️
+                            </button>
+                        </td>
                     `;
                     tableBody.appendChild(row);
                 });
