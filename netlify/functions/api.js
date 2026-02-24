@@ -79,14 +79,15 @@ async function postHandler(event) {
       };
     }
 
-    if (!time18 && !time19) {
-      console.log('[POST] Erreur: Aucun créneau sélectionné');
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({ error: 'Au moins un créneau requis' })
-      };
-    }
+    // Les créneaux sont maintenant optionnels - on ne valide plus
+    // if (!time18 && !time19) {
+    //   console.log('[POST] Erreur: Aucun créneau sélectionné');
+    //   return {
+    //     statusCode: 400,
+    //     headers,
+    //     body: JSON.stringify({ error: 'Au moins un créneau requis' })
+    //   };
+    // }
 
     // Créer l'entrée dans Firebase
     const volunteersRef = ref(database, 'volunteers');
@@ -146,14 +147,15 @@ async function putHandler(event) {
       };
     }
 
-    if (!time18 && !time19) {
-      console.log('[PUT] Erreur: Aucun créneau sélectionné');
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({ error: 'Au moins un créneau requis' })
-      };
-    }
+    // Les créneaux sont maintenant optionnels - on ne valide plus
+    // if (!time18 && !time19) {
+    //   console.log('[PUT] Erreur: Aucun créneau sélectionné');
+    //   return {
+    //     statusCode: 400,
+    //     headers,
+    //     body: JSON.stringify({ error: 'Au moins un créneau requis' })
+    //   };
+    // }
 
     // Mettre à jour l'entrée dans Firebase
     const volunteerRef = ref(database, `volunteers/${id}`);
