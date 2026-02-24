@@ -1,5 +1,5 @@
 const { initializeApp } = require('firebase/app');
-const { getDatabase, ref, set, push, get, remove } = require('firebase/database');
+const { getDatabase, ref, set, push, get, remove, update } = require('firebase/database');
 
 const firebaseConfig = {
   apiKey: "AIzaSyApJH6KoxUjKP-Mj3Xr-ZKjlAWZe31PI7Q",
@@ -18,7 +18,7 @@ const database = getDatabase(firebaseApp);
 const headers = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, DELETE, PUT, OPTIONS',
   'Content-Type': 'application/json'
 };
 
@@ -119,6 +119,70 @@ async function postHandler(event) {
   }
 }
 
+// Handler PUT - Modifier un volontaire
+async function putHandler(event) {
+  try {
+    console.log('[PUT] Modification d\'un volontaire');
+
+    const body = JSON.parse(event.body);
+    const { id, name, time18, time19, persons, tshirt } = body;
+
+    // Validation
+    if (!id) {
+      console.log('[PUT] Erreur: ID manquant');
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'ID du volontaire requis' })
+      };
+    }
+
+    if (!name) {
+      console.log('[PUT] Erreur: Nom manquant');
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Nom requis' })
+      };
+    }
+
+    if (!time18 && !time19) {
+      console.log('[PUT] Erreur: Aucun créneau sélectionné');
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Au moins un créneau requis' })
+      };
+    }
+
+    // Mettre à jour l'entrée dans Firebase
+    const volunteerRef = ref(database, `volunteers/${id}`);
+    await update(volunteerRef, {
+      name: name.trim(),
+      time18: !!time18,
+      time19: !!time19,
+      persons: parseInt(persons) || 1,
+      tshirt: tshirt || 'OK',
+      updatedAt: new Date().toISOString()
+    });
+
+    console.log('[PUT] Modification réussie:', id);
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ success: true, id })
+    };
+  } catch (error) {
+    console.error('[PUT] Erreur:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: 'Erreur lors de la modification' })
+    };
+  }
+}
+
 // Handler DELETE - Supprimer un volontaire
 async function deleteHandler(event) {
   try {
@@ -166,6 +230,8 @@ exports.handler = async (event, context) => {
     return getHandler(event);
   } else if (method === 'POST') {
     return postHandler(event);
+  } else if (method === 'PUT') {
+    return putHandler(event);
   } else if (method === 'DELETE') {
     return deleteHandler(event);
   } else {
