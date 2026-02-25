@@ -75,13 +75,19 @@
 
         .header-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
 
-        @media (max-width: 768px) {
+        @media (max-width: 860px) {
             .header-inner { flex-direction: column; gap: 10px; }
-            .header-info { max-width: 100%; width: 100%; }
-            .header-btns { gap: 6px; }
+            .header-info { max-width: 100%; width: 100%; box-sizing: border-box; }
+            .header-btns { gap: 6px; flex-wrap: wrap; }
             .btn-sheet, .btn-help { font-size: 0.8rem; padding: 7px 12px; }
             .connection-indicator { font-size: 0.72rem; padding: 5px 10px; }
         }
+
+        /* Anti-overflow global */
+        html, body { max-width: 100%; overflow-x: hidden; }
+        header, header * { max-width: 100%; }
+        .header-inner { box-sizing: border-box; width: 100%; }
+        .btn-sheet, .btn-help, .connection-indicator { flex-shrink: 1; min-width: 0; white-space: nowrap; }
 
         .btn-sheet { 
             display: inline-flex; 
