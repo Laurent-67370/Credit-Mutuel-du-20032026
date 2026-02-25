@@ -85,9 +85,20 @@
 
         /* Anti-overflow global */
         html, body { max-width: 100%; overflow-x: hidden; }
+        *, *::before, *::after { box-sizing: border-box; }
         header, header * { max-width: 100%; }
         .header-inner { box-sizing: border-box; width: 100%; }
         .btn-sheet, .btn-help, .connection-indicator { flex-shrink: 1; min-width: 0; white-space: nowrap; }
+
+        @media (max-width: 480px) {
+            main { padding: 0 10px; gap: 16px; }
+            .card, .torchon-card, .tshirt-card { padding: 16px 14px; }
+            .torchon-input-row input { width: 65px; }
+            .tshirt-grid { gap: 6px; }
+            .tshirt-item { padding: 8px 4px; }
+            .tshirt-count { font-size: 1.3rem; }
+            .tshirt-size { font-size: 0.68rem; }
+        }
 
         .btn-sheet { 
             display: inline-flex; 
