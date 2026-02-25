@@ -170,6 +170,19 @@
         
         @media (max-width: 768px) { main { grid-template-columns: 1fr; } }
 
+        /* Les enfants directs d'un grid doivent avoir min-width:0 pour pouvoir rétrécir */
+        main > div { min-width: 0; width: 100%; }
+        .card, .torchon-card, .tshirt-card { min-width: 0; overflow: hidden; }
+
+        /* Tous les éléments de formulaire restent dans leur conteneur */
+        input[type="text"], input[type="number"], select, 
+        .checkbox-label, .btn-submit, .help-tip { 
+            max-width: 100%; 
+            min-width: 0; 
+        }
+        .checkbox-row { flex-wrap: nowrap; }
+        .checkbox-label { flex: 1 1 0; min-width: 0; overflow: hidden; }
+
         .card { 
             background: var(--surface); 
             border-radius: 16px; 
